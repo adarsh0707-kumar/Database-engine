@@ -10,6 +10,7 @@ enum CommandType
     INSERT,
     SELECT,
     DELETE,
+    UPDATE,
     UNKNOWN
 };
 

@@ -7,8 +7,6 @@
 
 static std::map<std::string, std::vector<std::vector<std::string>>> db;
 
-
-
 std::string get_file_path(const std::string &table)
 {
     if (!std::filesystem::exists("data"))
@@ -48,9 +46,8 @@ void insert_into(const std::string &name, const std::vector<std::string> &values
     std::cout << "Inserted into " << name << "\n";
 }
 
-void select_data(const Command& cmd)
+void select_data(const Command &cmd)
 {
-
 
     if (db.find(cmd.table) == db.end())
     {
@@ -62,24 +59,26 @@ void select_data(const Command& cmd)
 
     // Simple mapping (hardcoded for now)
 
-    if(cmd.where_column == "id")
+    if (cmd.where_column == "id")
         column_index = 0;
-    
-    if(cmd.where_column == "name")
+
+    if (cmd.where_column == "name")
         column_index = 1;
 
-    for(auto& row : db[cmd.table]){
+    for (auto &row : db[cmd.table])
+    {
 
-        if(cmd.has_where){
-            if(column_index == -1)
+        if (cmd.has_where)
+        {
+            if (column_index == -1)
                 continue;
-            if(row[column_index] != cmd.where_value)
+            if (row[column_index] != cmd.where_value)
                 continue;
         }
 
-
-        for(auto& col : row){
-            std::cout << col <<" ";
+        for (auto &col : row)
+        {
+            std::cout << col << " ";
         }
         std::cout << std::endl;
     }
@@ -107,16 +106,56 @@ void load_all_tables()
             std::string val;
             std::vector<std::string> row;
 
-            while(ss>> val){
+            while (ss >> val)
+            {
                 row.push_back(val);
             }
 
             db[table].push_back(row);
-
         }
         file.close();
-
     }
 
-    std::cout <<"Data loaded into memory\n";
+    std::cout << "Data loaded into memory\n";
+}
+
+void delete_data(const Command &cmd)
+{
+    if (db.find(cmd.table) == db.end())
+    {
+        std::cout << "Table not found\n";
+        return;
+    }
+
+    int column_index = -1;
+
+    // Simple mapping (hardcoded for now)
+
+    if (cmd.where_column == "id")
+        column_index = 0;
+
+    else if (cmd.where_column == "name")
+        column_index = 1;
+
+    auto &rows = db[cmd.table];
+
+    rows.erase(
+        std::remove_if(rows.begin(), rows.end(), [&](const std::vector<std::string> &row)
+                       { return cmd.has_where &&
+                                row[column_index] == cmd.where_value; }),
+        rows.end()
+    );
+
+    // Rewrite file
+    std::ofstream file(get_file_path(cmd.table));
+    for (auto &row : rows)
+    {
+        for (auto &col : row)
+        {
+            file << col << " ";
+        }
+        file << "\n";
+    }
+    file.close();
+    std::cout << "Data deleted from " << cmd.table << "\n";
 }

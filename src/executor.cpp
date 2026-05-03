@@ -13,6 +13,9 @@ void execute_command(const Command& cmd){
         case SELECT:
             select_data(cmd);
             break;
+        case DELETE:
+            delete_data(cmd);
+            break;
         default:
             std::cout << "Unknown command\n";  
     }
