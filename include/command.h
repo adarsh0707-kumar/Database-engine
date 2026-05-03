@@ -24,6 +24,8 @@ struct Command
     std::string where_value;
     bool has_where = false;
 
+    std::string update_column;
+    std::string update_value;
 };
 
 #endif // COMMAND_H

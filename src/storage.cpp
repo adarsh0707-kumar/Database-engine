@@ -159,3 +159,50 @@ void delete_data(const Command &cmd)
     file.close();
     std::cout << "Data deleted from " << cmd.table << "\n";
 }
+
+void update_data(const Command &cmd)
+{
+    if (db.find(cmd.table) == db.end())
+    {
+        std::cout << "Table not found\n";
+        return;
+    }
+
+    int where_index = -1;
+    int update_index = -1;
+
+    // Simple mapping (hardcoded for now)
+
+    if (cmd.where_column == "id")
+        where_index = 0;
+
+    else if (cmd.where_column == "name")
+        where_index = 1;
+
+    if (cmd.update_column == "id")
+        update_index = 0;
+
+    else if (cmd.update_column == "name")
+        update_index = 1;
+
+    for (auto &row : db[cmd.table])
+    {
+        if (cmd.has_where && row[where_index] == cmd.where_value)
+        {
+            row[update_index] = cmd.update_value;
+        }
+    }
+
+    // Rewrite file
+    std::ofstream file(get_file_path(cmd.table));
+    for (auto &row : db[cmd.table])
+    {
+        for (auto &col : row)
+        {
+            file << col << " ";
+        }
+        file << "\n";
+    }
+    file.close();
+    std::cout << "Data updated in " << cmd.table << "\n";
+}
