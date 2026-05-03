@@ -9,6 +9,7 @@ std::string clean(const std::string& str){
     s.erase(remove(s.begin(), s.end(), ';'), s.end());
     s.erase(remove(s.begin(), s.end(), '('), s.end());
     s.erase(remove(s.begin(), s.end(), ')'), s.end());
+    s.erase(remove(s.begin(), s.end(), ','), s.end());
 
     return s;
 }
