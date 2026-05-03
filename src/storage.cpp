@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <sstream>
+#include <algorithm>
 
 static std::map<std::string, std::vector<std::vector<std::string>>> db;
 
