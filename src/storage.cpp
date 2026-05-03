@@ -7,8 +7,15 @@
 
 static std::map<std::string, std::vector<std::vector<std::string>>> db;
 
+
+
 std::string get_file_path(const std::string &table)
 {
+    if (!std::filesystem::exists("data"))
+    {
+        std::filesystem::create_directory("data");
+    }
+    
     return "data/" + table + ".table";
 }
 
