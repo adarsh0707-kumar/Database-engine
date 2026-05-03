@@ -11,7 +11,7 @@ void execute_command(const Command& cmd){
             insert_into(cmd.table, cmd.values);
             break;
         case SELECT:
-            select_all(cmd.table);
+            select_data(cmd);
             break;
         default:
             std::cout << "Unknown command\n";  

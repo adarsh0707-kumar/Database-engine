@@ -15,7 +15,7 @@ std::string get_file_path(const std::string &table)
     {
         std::filesystem::create_directory("data");
     }
-    
+
     return "data/" + table + ".table";
 }
 
@@ -48,16 +48,36 @@ void insert_into(const std::string &name, const std::vector<std::string> &values
     std::cout << "Inserted into " << name << "\n";
 }
 
-void select_all(const std::string &name)
+void select_data(const Command& cmd)
 {
 
-    if (db.find(name) == db.end())
+
+    if (db.find(cmd.table) == db.end())
     {
         std::cout << "Table not found\n";
         return;
     }
 
-    for(auto& row : db[name]){
+    int column_index = -1;
+
+    // Simple mapping (hardcoded for now)
+
+    if(cmd.where_column == "id")
+        column_index = 0;
+    
+    if(cmd.where_column == "name")
+        column_index = 1;
+
+    for(auto& row : db[cmd.table]){
+
+        if(cmd.has_where){
+            if(column_index == -1)
+                continue;
+            if(row[column_index] != cmd.where_value)
+                continue;
+        }
+
+
         for(auto& col : row){
             std::cout << col <<" ";
         }

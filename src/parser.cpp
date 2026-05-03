@@ -49,6 +49,19 @@ Command parse_command(const std::string& input)
         ss >> star >> from >> table;
         cmd.type = SELECT;
         cmd.table = clean(table);
+
+        std::string where;
+        ss >> where;
+
+        if(where == "WHERE"){
+            std::string column, equal, value;
+
+            ss >> column >> equal >> value;
+
+            cmd.has_where = true;
+            cmd.where_column = clean(column);
+            cmd.where_value = clean(value);
+        }
     }
     return cmd;
 }

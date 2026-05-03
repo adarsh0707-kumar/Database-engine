@@ -18,6 +18,11 @@ struct Command
     CommandType type;
     std::string table;
     std::vector<std::string> values;
+
+    std::string where_column;
+    std::string where_value;
+    bool has_where = false;
+
 };
 
 #endif // COMMAND_H
